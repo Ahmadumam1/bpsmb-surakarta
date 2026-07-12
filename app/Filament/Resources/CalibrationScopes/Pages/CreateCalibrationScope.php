@@ -1,0 +1,11 @@
+<?php
+
+namespace App\Filament\Resources\CalibrationScopes\Pages;
+
+use App\Filament\Resources\CalibrationScopes\CalibrationScopeResource;
+use Filament\Resources\Pages\CreateRecord;
+
+class CreateCalibrationScope extends CreateRecord
+{
+    protected static string $resource = CalibrationScopeResource::class;
+}
