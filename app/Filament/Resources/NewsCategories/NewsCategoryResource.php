@@ -39,10 +39,6 @@ class NewsCategoryResource extends Resource
 
     protected static ?int $navigationSort = 2;
 
-    protected static function allowedRoles(): array
-    {
-        return ['superadmin', 'admin'];
-    }
 
     protected static function permissionKey(): ?string
     {

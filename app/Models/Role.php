@@ -33,12 +33,6 @@ class Role extends Model
             return true;
         }
 
-        $permissions = $this->permissions;
-
-        if (is_string($permissions)) {
-            $permissions = json_decode($permissions, true) ?: [];
-        }
-
-        return in_array($permission, $permissions ?? [], true);
+        return in_array($permission, $this->permissions ?? [], true);
     }
 }

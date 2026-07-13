@@ -68,7 +68,7 @@ class ServiceController extends Controller
     {
         $search = trim((string) $request->query('q'));
         $selectedCategory = (string) $request->query('category');
-        $baseQuery = TestingDuration::query()->active();
+        $baseQuery = TestingDuration::query();
         $categories = (clone $baseQuery)->orderBy('category')->pluck('category')->unique()->values();
         $testingDurations = (clone $baseQuery)
             ->orderBy('category')
@@ -99,7 +99,7 @@ class ServiceController extends Controller
     public function testingAccreditationScope(Request $request)
     {
         $search = trim((string) $request->query('q'));
-        $baseQuery = AccreditationScope::query()->active();
+        $baseQuery = AccreditationScope::query();
         $scopes = (clone $baseQuery)
             ->orderBy('id')
             ->get()

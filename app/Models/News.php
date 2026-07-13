@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\HasPublicImageUrl;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -9,6 +10,7 @@ use Illuminate\Support\Facades\Storage;
 
 class News extends Model
 {
+    use HasPublicImageUrl;
     protected $table = 'news';
 
     protected $fillable = [
@@ -55,14 +57,6 @@ class News extends Model
 
     public function getThumbnailUrlAttribute(): ?string
     {
-        if ($this->thumbnail === null || $this->thumbnail === '') {
-            return null;
-        }
-
-        if (str_starts_with($this->thumbnail, 'http://') || str_starts_with($this->thumbnail, 'https://') || str_starts_with($this->thumbnail, '/')) {
-            return $this->thumbnail;
-        }
-
-        return Storage::disk('public')->url($this->thumbnail);
+        return $this->publicImageUrl($this->thumbnail);
     }
 }

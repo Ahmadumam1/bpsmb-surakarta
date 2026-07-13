@@ -57,10 +57,6 @@ class ProfilePageResource extends Resource
             ->all();
     }
 
-    protected static function allowedRoles(): array
-    {
-        return ['superadmin', 'admin'];
-    }
 
     protected static function permissionKey(): ?string
     {
@@ -86,10 +82,21 @@ class ProfilePageResource extends Resource
                     'image/png',
                     'image/webp',
                 ])
-                ->maxSize(20480)
+                ->maxSize(5120)
+                ->rules([
+                    fn (): \Closure => function (string $attribute, $value, \Closure $fail) {
+                        if ($value instanceof \Illuminate\Http\UploadedFile) {
+                            $isImage = str_starts_with($value->getMimeType(), 'image/');
+                            $maxKb = $isImage ? 2048 : 5120;
+                            if ($value->getSize() > $maxKb * 1024) {
+                                $fail($isImage ? 'Ukuran gambar tidak boleh lebih dari 2 MB.' : 'Ukuran file tidak boleh lebih dari 5 MB.');
+                            }
+                        }
+                    },
+                ])
                 ->downloadable(false)
                 ->openable(false)
-                ->helperText('PDF, JPG, PNG, atau WEBP. Maksimal 20 MB.')
+                ->helperText('PDF (Maks. 5 MB) atau JPG, PNG, WEBP (Maks. 2 MB).')
                 ->columnSpanFull(),
             Toggle::make('is_active')->label('Aktif')->default(true)->required(),
         ]);

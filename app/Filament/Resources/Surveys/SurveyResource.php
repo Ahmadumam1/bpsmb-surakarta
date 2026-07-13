@@ -43,10 +43,6 @@ class SurveyResource extends Resource
 
     protected static ?int $navigationSort = 12;
 
-    protected static function allowedRoles(): array
-    {
-        return ['superadmin', 'admin'];
-    }
 
     protected static function permissionKey(): ?string
     {
@@ -70,11 +66,22 @@ class SurveyResource extends Resource
                 ->disk('local')
                 ->directory('surveys/satisfaction')
                 ->acceptedFileTypes(Survey::ALLOWED_MIME_TYPES)
-                ->maxSize(20480)
+                ->maxSize(5120)
+                ->rules([
+                    fn (): \Closure => function (string $attribute, $value, \Closure $fail) {
+                        if ($value instanceof \Illuminate\Http\UploadedFile) {
+                            $isImage = str_starts_with($value->getMimeType(), 'image/');
+                            $maxKb = $isImage ? 2048 : 5120;
+                            if ($value->getSize() > $maxKb * 1024) {
+                                $fail($isImage ? 'Ukuran gambar tidak boleh lebih dari 2 MB.' : 'Ukuran file tidak boleh lebih dari 5 MB.');
+                            }
+                        }
+                    },
+                ])
                 ->downloadable(false)
                 ->openable(false)
                 ->required()
-                ->helperText('Hanya PDF, JPG, PNG, atau WEBP. Maksimal 20 MB. File ditampilkan di halaman Survei Kepuasan Pelanggan.'),
+                ->helperText('Hanya PDF (Maks. 5 MB) atau JPG, PNG, WEBP (Maks. 2 MB). File ditampilkan di halaman Survei Kepuasan Pelanggan.'),
             Hidden::make('file_type'),
             TextInput::make('sort_order')
                 ->label('Urutan')

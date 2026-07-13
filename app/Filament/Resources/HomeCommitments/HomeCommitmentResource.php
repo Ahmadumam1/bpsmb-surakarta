@@ -41,10 +41,6 @@ class HomeCommitmentResource extends Resource
 
     protected static ?int $navigationSort = 2;
 
-    protected static function allowedRoles(): array
-    {
-        return ['superadmin', 'admin'];
-    }
 
     protected static function permissionKey(): ?string
     {
@@ -58,7 +54,15 @@ class HomeCommitmentResource extends Resource
             TextInput::make('title')->label('Judul')->required()->maxLength(255),
             Textarea::make('statement')->label('Kata kata ')->rows(4)->columnSpanFull(),
             Textarea::make('description')->label('Keterangan')->rows(3)->columnSpanFull(),
-            FileUpload::make('image')->label('Gambar')->image()->disk('public')->directory('home/commitments')->imageEditor()->columnSpanFull(),
+            FileUpload::make('image')
+                ->label('Gambar')
+                ->image()
+                ->disk('public')
+                ->directory('home/commitments')
+                ->imageEditor()
+                ->maxSize(2048)
+                ->helperText('Gambar PNG, JPG, atau WEBP. Maksimal 2 MB.')
+                ->columnSpanFull(),
             Toggle::make('is_active')->label('Aktif')->default(true)->required(),
         ]);
     }

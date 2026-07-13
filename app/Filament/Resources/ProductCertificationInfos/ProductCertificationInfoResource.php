@@ -39,10 +39,6 @@ class ProductCertificationInfoResource extends Resource
 
     protected static ?int $navigationSort = 5;
 
-    protected static function allowedRoles(): array
-    {
-        return ['superadmin', 'admin'];
-    }
 
     protected static function permissionKey(): ?string
     {
@@ -77,10 +73,10 @@ class ProductCertificationInfoResource extends Resource
                 ->disk('local')
                 ->directory('product-certification/information')
                 ->acceptedFileTypes(ProductCertificationInfo::ALLOWED_MIME_TYPES)
-                ->maxSize(10240)
+                ->maxSize(5120)
                 ->downloadable(false)
                 ->openable(false)
-                ->helperText('Hanya PDF. Maksimal 10 MB. File disimpan private dan dibuka lewat route aman.')
+                ->helperText('Hanya PDF. Maksimal 5 MB.')
                 ->columnSpanFull(),
         ]);
     }

@@ -55,10 +55,6 @@ class HomePopupResource extends Resource
             ])->getKey();
     }
 
-    protected static function allowedRoles(): array
-    {
-        return ['superadmin', 'admin'];
-    }
 
     protected static function permissionKey(): ?string
     {
@@ -84,6 +80,8 @@ class HomePopupResource extends Resource
                 ->disk('public')
                 ->directory('home/popups')
                 ->imageEditor()
+                ->maxSize(2048)
+                ->helperText('Gambar PNG, JPG, atau WEBP. Maksimal 2 MB. Rekomendasi ukuran: 768 x 580 piksel (Rasio 4:3) agar tampil pas tanpa scroll.')
                 ->required()
                 ->columnSpanFull(),
             FileUpload::make('image_2')
@@ -92,6 +90,8 @@ class HomePopupResource extends Resource
                 ->disk('public')
                 ->directory('home/popups')
                 ->imageEditor()
+                ->maxSize(2048)
+                ->helperText('Gambar PNG, JPG, atau WEBP. Maksimal 2 MB. Rekomendasi ukuran: 768 x 580 piksel (Rasio 4:3) agar tampil pas tanpa scroll.')
                 ->columnSpanFull(),
             FileUpload::make('image_3')
                 ->label('Gambar Pengumuman 3 (Opsional)')
@@ -99,6 +99,8 @@ class HomePopupResource extends Resource
                 ->disk('public')
                 ->directory('home/popups')
                 ->imageEditor()
+                ->maxSize(2048)
+                ->helperText('Gambar PNG, JPG, atau WEBP. Maksimal 2 MB. Rekomendasi ukuran: 768 x 580 piksel (Rasio 4:3) agar tampil pas tanpa scroll.')
                 ->columnSpanFull(),
             TextInput::make('link_url')
                 ->label('Tautan / Link Tujuan (Opsional)')

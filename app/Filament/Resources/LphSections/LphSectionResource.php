@@ -42,10 +42,6 @@ class LphSectionResource extends Resource
 
     protected static ?int $navigationSort = 9;
 
-    protected static function allowedRoles(): array
-    {
-        return ['superadmin', 'admin'];
-    }
 
     protected static function permissionKey(): ?string
     {
@@ -97,10 +93,21 @@ class LphSectionResource extends Resource
                             'image/png',
                             'image/webp',
                         ])
-                        ->maxSize(20480)
+                        ->maxSize(5120)
+                        ->rules([
+                            fn (): \Closure => function (string $attribute, $value, \Closure $fail) {
+                                if ($value instanceof \Illuminate\Http\UploadedFile) {
+                                    $isImage = str_starts_with($value->getMimeType(), 'image/');
+                                    $maxKb = $isImage ? 2048 : 5120;
+                                    if ($value->getSize() > $maxKb * 1024) {
+                                        $fail($isImage ? 'Ukuran gambar tidak boleh lebih dari 2 MB.' : 'Ukuran file tidak boleh lebih dari 5 MB.');
+                                    }
+                                }
+                            },
+                        ])
                         ->downloadable(false)
                         ->openable(false)
-                        ->helperText('Opsional. PDF, JPG, PNG, atau WEBP. Maksimal 20 MB.'),
+                        ->helperText('Opsional. PDF (Maks. 5 MB) atau JPG, PNG, WEBP (Maks. 2 MB).'),
                 ])
                 ->defaultItems(0)
                 ->addActionLabel('Tambah poin')

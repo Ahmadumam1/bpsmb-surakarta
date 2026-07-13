@@ -41,10 +41,6 @@ class CostDocumentResource extends Resource
 
     protected static ?int $navigationSort = 2;
 
-    protected static function allowedRoles(): array
-    {
-        return ['superadmin', 'admin'];
-    }
 
     protected static function permissionKey(): ?string
     {
@@ -64,11 +60,11 @@ class CostDocumentResource extends Resource
                 ->disk('local')
                 ->directory('costs')
                 ->acceptedFileTypes([CostDocument::PDF_MIME_TYPE])
-                ->maxSize(20480)
+                ->maxSize(5120)
                 ->downloadable(false)
                 ->openable(false)
                 ->required()
-                ->helperText('Hanya file PDF. Maksimal 20 MB. File ditampilkan di halaman Biaya melalui viewer website.'),
+                ->helperText('Hanya file PDF. Maksimal 5 MB.'),
             TextInput::make('sort_order')
                 ->label('Urutan')
                 ->numeric()

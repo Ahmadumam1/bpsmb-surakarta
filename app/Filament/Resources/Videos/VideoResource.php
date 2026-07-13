@@ -41,10 +41,6 @@ class VideoResource extends Resource
 
     protected static ?int $navigationSort = 4;
 
-    protected static function allowedRoles(): array
-    {
-        return ['superadmin', 'admin'];
-    }
 
     protected static function permissionKey(): ?string
     {
@@ -57,7 +53,14 @@ class VideoResource extends Resource
             TextInput::make('category')->label('Kategori / tanggal')->maxLength(255),
             TextInput::make('title')->label('Judul')->required()->maxLength(255),
             Textarea::make('description')->label('Deskripsi / durasi')->rows(3)->columnSpanFull(),
-            FileUpload::make('thumbnail')->label('Thumbnail opsional')->image()->disk('public')->directory('home/videos')->imageEditor(),
+            FileUpload::make('thumbnail')
+                ->label('Thumbnail opsional')
+                ->image()
+                ->disk('public')
+                ->directory('home/videos')
+                ->imageEditor()
+                ->maxSize(2048)
+                ->helperText('Gambar PNG, JPG, atau WEBP. Maksimal 2 MB.'),
             TextInput::make('video_url')->label('Link YouTube')->url()->maxLength(255),
             Toggle::make('is_featured')->label('Video utama')->default(false)->required(),
             Toggle::make('is_active')->label('Aktif')->default(true)->required(),

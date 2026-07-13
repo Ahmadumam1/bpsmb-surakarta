@@ -56,10 +56,6 @@ class HomeHeadlineResource extends Resource
             ])->getKey();
     }
 
-    protected static function allowedRoles(): array
-    {
-        return ['superadmin', 'admin'];
-    }
 
     protected static function permissionKey(): ?string
     {
@@ -77,9 +73,31 @@ class HomeHeadlineResource extends Resource
             TextInput::make('subtitle')->label('Label kecil')->maxLength(255)->columnSpanFull(),
             TextInput::make('title')->label('Judul')->required()->columnSpanFull(),
             Textarea::make('description')->label('Deskripsi')->rows(4)->columnSpanFull(),
-            FileUpload::make('image')->label('Foto headline 1')->image()->disk('public')->directory('home/headlines')->imageEditor()->columnSpanFull(),
-            FileUpload::make('image_2')->label('Foto headline 2')->image()->disk('public')->directory('home/headlines')->imageEditor(),
-            FileUpload::make('image_3')->label('Foto headline 3')->image()->disk('public')->directory('home/headlines')->imageEditor(),
+            FileUpload::make('image')
+                ->label('Foto headline 1')
+                ->image()
+                ->disk('public')
+                ->directory('home/headlines')
+                ->imageEditor()
+                ->maxSize(2048)
+                ->helperText('Gambar PNG, JPG, atau WEBP. Maksimal 2 MB.')
+                ->columnSpanFull(),
+            FileUpload::make('image_2')
+                ->label('Foto headline 2')
+                ->image()
+                ->disk('public')
+                ->directory('home/headlines')
+                ->imageEditor()
+                ->maxSize(2048)
+                ->helperText('Gambar PNG, JPG, atau WEBP. Maksimal 2 MB.'),
+            FileUpload::make('image_3')
+                ->label('Foto headline 3')
+                ->image()
+                ->disk('public')
+                ->directory('home/headlines')
+                ->imageEditor()
+                ->maxSize(2048)
+                ->helperText('Gambar PNG, JPG, atau WEBP. Maksimal 2 MB.'),
             TextInput::make('primary_button_label')->label('Label tombol utama')->maxLength(255),
             TextInput::make('primary_button_url')->label('URL tombol utama')->maxLength(255),
             TextInput::make('secondary_button_label')->label('Label tombol kedua')->maxLength(255),

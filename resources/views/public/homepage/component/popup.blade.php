@@ -13,19 +13,24 @@
             <div id="popup-overlay" class="absolute inset-0"></div>
             
             <!-- Modal Box -->
-            <div class="popup-card relative z-10 w-full max-w-3xl mx-4 transform scale-95 opacity-0 transition-all duration-300 ease-out bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col">
+            <div class="popup-card relative z-10 w-full max-w-3xl mx-4 transform scale-95 opacity-0 transition-all duration-300 ease-out bg-white rounded-xl shadow-2xl overflow-hidden flex flex-col">
                 
-                <!-- Slides Container -->
-                <div class="relative overflow-hidden flex-1 bg-white h-[75vh] md:h-[580px] w-full">
+                <!-- Yellow Header Bar -->
+                <div class="bg-[#f39c12] text-white px-5 py-3 font-semibold text-base sm:text-[17px] tracking-wide shadow-sm flex items-center justify-between select-none">
+                    <span>{{ $popup->title ?? 'Informasi Terkait PDP' }}</span>
+                </div>
+
+                <!-- Slides Container (Scrollable) -->
+                <div class="relative overflow-y-auto flex-1 bg-white max-h-[70vh] md:max-h-[580px] w-full p-4 sm:p-6">
                     @foreach ($images as $index => $imgUrl)
-                        <div data-popup-slide="{{ $index }}" class="popup-slide w-full h-full {{ $index === 0 ? 'block' : 'hidden' }}">
+                        <div data-popup-slide="{{ $index }}" class="popup-slide w-full {{ $index === 0 ? 'block' : 'hidden' }}">
                             @if ($popup->link_url)
-                                <a href="{{ $popup->link_url }}" class="block w-full h-full">
-                                    <img src="{{ $imgUrl }}" alt="Slide {{ $index + 1 }}" class="w-full h-full object-contain">
+                                <a href="{{ $popup->link_url }}" class="block w-full">
+                                    <img src="{{ $imgUrl }}" alt="Slide {{ $index + 1 }}" class="w-full h-auto block object-contain rounded-lg shadow-sm">
                                 </a>
                             @else
-                                <div class="w-full h-full">
-                                    <img src="{{ $imgUrl }}" alt="Slide {{ $index + 1 }}" class="w-full h-full object-contain">
+                                <div class="w-full">
+                                    <img src="{{ $imgUrl }}" alt="Slide {{ $index + 1 }}" class="w-full h-auto block object-contain rounded-lg shadow-sm">
                                 </div>
                             @endif
                         </div>
@@ -33,9 +38,9 @@
                 </div>
                 
                 <!-- Bottom Action Button bar -->
-                <div class="bg-gray-50 border-t border-gray-100 px-5 py-3 flex items-center justify-end">
-                    <button type="button" id="popup-action-btn" class="w-full sm:w-auto min-w-[120px] rounded-lg bg-[#08236f] hover:bg-[#0b2f93] px-6 py-2.5 text-sm font-semibold text-white shadow-md active:scale-95 transition-all focus:outline-none">
-                        {{ $images->count() > 1 ? 'Next' : 'Tutup' }}
+                <div class="bg-white border-t border-gray-200 px-5 py-3 flex items-center justify-end">
+                    <button type="button" id="popup-action-btn" class="w-full sm:w-auto min-w-[100px] rounded bg-[#6c757d] hover:bg-[#5a6268] active:bg-[#4e555b] px-4 py-2 text-sm font-semibold text-white shadow-md transition-all focus:outline-none">
+                        {{ $images->count() > 1 ? 'Next' : 'Close' }}
                     </button>
                 </div>
             </div>
@@ -105,9 +110,9 @@
                                 slides[currentSlide].classList.remove('hidden');
                                 slides[currentSlide].classList.add('block');
                                 
-                                // Jika ini adalah slide terakhir, ubah text tombol menjadi 'Tutup'
+                                // Jika ini adalah slide terakhir, ubah text tombol menjadi 'Close'
                                 if (currentSlide === imagesCount - 1) {
-                                    actionBtn.textContent = 'Tutup';
+                                    actionBtn.textContent = 'Close';
                                 }
                             } else {
                                 // Close modal

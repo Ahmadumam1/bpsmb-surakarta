@@ -40,10 +40,6 @@ class PhotoResource extends Resource
 
     protected static ?int $navigationSort = 3;
 
-    protected static function allowedRoles(): array
-    {
-        return ['superadmin', 'admin'];
-    }
 
     protected static function permissionKey(): ?string
     {
@@ -55,7 +51,14 @@ class PhotoResource extends Resource
         return $schema->components([
             TextInput::make('category')->label('Kategori')->maxLength(255),
             TextInput::make('title')->label('Judul')->required()->maxLength(255),
-            FileUpload::make('image')->label('Foto')->image()->disk('public')->directory('home/photos')->imageEditor(),
+            FileUpload::make('image')
+                ->label('Foto')
+                ->image()
+                ->disk('public')
+                ->directory('home/photos')
+                ->imageEditor()
+                ->maxSize(2048)
+                ->helperText('Gambar PNG, JPG, atau WEBP. Maksimal 2 MB.'),
             Toggle::make('is_active')->label('Aktif')->default(true)->required(),
         ]);
     }

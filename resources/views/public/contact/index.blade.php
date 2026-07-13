@@ -275,6 +275,16 @@
                                 <textarea id="message" name="message" rows="5" required class="mt-1.5 w-full rounded-lg border border-gray-200 bg-gray-50 px-4 py-2.5 text-[14px] text-gray-800 focus:border-[#08236f] focus:bg-white focus:outline-none transition-all resize-none" placeholder="Tuliskan isi pesan Anda di sini..."></textarea>
                             </div>
                             
+                            <!-- Google reCAPTCHA widget -->
+                            @if(config('services.recaptcha.site'))
+                                <div class="mt-2">
+                                    <div class="g-recaptcha" data-sitekey="{{ config('services.recaptcha.site') }}"></div>
+                                    @error('g-recaptcha-response')
+                                        <span class="mt-1 block text-xs font-semibold text-red-500">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            @endif
+
                             <!-- Submit Button -->
                             <button type="submit" class="mt-2 w-full rounded-lg bg-[#08236f] hover:bg-[#0b2f93] py-3 text-sm font-semibold text-white shadow-md active:scale-[0.98] transition-all focus:outline-none">
                                 Kirim Pesan
@@ -287,3 +297,9 @@
         </div>
     </section>
 @endsection
+
+@push('scripts')
+    @if(config('services.recaptcha.site'))
+        <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    @endif
+@endpush

@@ -40,10 +40,6 @@ class CalibrationScopeResource extends Resource
 
     protected static ?int $navigationSort = 3;
 
-    protected static function allowedRoles(): array
-    {
-        return ['superadmin', 'admin'];
-    }
 
     protected static function permissionKey(): ?string
     {

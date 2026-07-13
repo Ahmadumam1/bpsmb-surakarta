@@ -4,19 +4,12 @@ namespace App\Http\Controllers\Public;
 
 use App\Http\Controllers\Controller;
 use App\Models\ProfilePage;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 
 class ProfilePageController extends Controller
 {
     public function show(string $slug)
     {
-        if (! Schema::hasTable('profile_pages')) {
-            return view('public.profile.show', [
-                'page' => $this->fallbackPage($slug),
-            ]);
-        }
-
         $page = ProfilePage::query()
             ->active()
             ->where('slug', $slug)

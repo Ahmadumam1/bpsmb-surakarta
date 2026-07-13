@@ -39,10 +39,6 @@ class TestingDurationResource extends Resource
 
     protected static ?int $navigationSort = 1;
 
-    protected static function allowedRoles(): array
-    {
-        return ['superadmin', 'admin'];
-    }
 
     protected static function permissionKey(): ?string
     {

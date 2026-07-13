@@ -39,8 +39,9 @@ class ListTestingDurations extends ListRecords
                             'application/csv',
                             'application/vnd.ms-excel',
                         ])
+                        ->maxSize(5120)
                         ->required()
-                        ->helperText('Gunakan file CSV dengan kolom: kategori, karakteristik_uji, durasi. Durasi otomatis ditampilkan sebagai hari kerja.'),
+                        ->helperText('Gunakan file CSV dengan kolom: kategori, karakteristik_uji, durasi. Maksimal 5 MB.'),
                 ])
                 ->action(function (array $data): void {
                     $path = is_array($data['file']) ? reset($data['file']) : $data['file'];

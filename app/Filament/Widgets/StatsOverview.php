@@ -5,7 +5,6 @@ namespace App\Filament\Widgets;
 use App\Models\VisitorStat;
 use App\Models\Photo;
 use App\Models\Video;
-use App\Models\HomeHeadline;
 use App\Models\News;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
@@ -18,8 +17,6 @@ class StatsOverview extends BaseWidget
         $totalPhotos = Photo::count();
         $totalVideos = Video::count();
         $totalBerita = News::count();
-        $activeHeadlines = HomeHeadline::query()->active()->count();
-
 
         $visitorTrend = VisitorStat::query()
             ->orderBy('date', 'desc')

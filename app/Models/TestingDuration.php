@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 class TestingDuration extends Model
@@ -18,10 +17,5 @@ class TestingDuration extends Model
         return [
             'duration' => 'integer',
         ];
-    }
-
-    public function scopeActive(Builder $query): Builder
-    {
-        return $query;
     }
 }

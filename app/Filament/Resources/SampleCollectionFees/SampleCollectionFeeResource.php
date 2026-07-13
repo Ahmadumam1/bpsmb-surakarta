@@ -37,10 +37,6 @@ class SampleCollectionFeeResource extends Resource
 
     protected static ?int $navigationSort = 6;
 
-    protected static function allowedRoles(): array
-    {
-        return ['superadmin', 'admin'];
-    }
 
     protected static function permissionKey(): ?string
     {

@@ -40,10 +40,6 @@ class HomeMarqueeLogoResource extends Resource
 
     protected static ?int $navigationSort = 6;
 
-    protected static function allowedRoles(): array
-    {
-        return ['superadmin', 'admin'];
-    }
 
     protected static function permissionKey(): ?string
     {
@@ -54,7 +50,14 @@ class HomeMarqueeLogoResource extends Resource
     {
         return $schema->components([
             TextInput::make('name')->label('Nama aplikasi')->required()->maxLength(255),
-            FileUpload::make('image')->label('Logo')->image()->disk('public')->directory('home/marquee-logos')->imageEditor(),
+            FileUpload::make('image')
+                ->label('Logo')
+                ->image()
+                ->disk('public')
+                ->directory('home/marquee-logos')
+                ->imageEditor()
+                ->maxSize(2048)
+                ->helperText('Gambar PNG, JPG, atau WEBP. Maksimal 2 MB.'),
             TextInput::make('url')
                 ->label('Link external')
                 ->url()

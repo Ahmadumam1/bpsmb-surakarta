@@ -49,10 +49,6 @@ class NewsResource extends Resource
 
     protected static ?int $navigationSort = 1;
 
-    protected static function allowedRoles(): array
-    {
-        return ['superadmin', 'admin'];
-    }
 
     protected static function permissionKey(): ?string
     {
@@ -73,7 +69,15 @@ class NewsResource extends Resource
             TextInput::make('author')->label('Penulis')->maxLength(255),
             DateTimePicker::make('published_at')->label('Tanggal publikasi')->seconds(false)->default(now()),
             Toggle::make('is_published')->label('Publikasikan')->default(true)->required(),
-            FileUpload::make('thumbnail')->label('Thumbnail')->image()->disk('public')->directory('news')->imageEditor()->columnSpanFull(),
+            FileUpload::make('thumbnail')
+                ->label('Thumbnail')
+                ->image()
+                ->disk('public')
+                ->directory('news')
+                ->imageEditor()
+                ->maxSize(2048)
+                ->helperText('Gambar PNG, JPG, atau WEBP. Maksimal 2 MB.')
+                ->columnSpanFull(),
             Textarea::make('excerpt')->label('Ringkasan')->rows(3)->maxLength(500)->columnSpanFull(),
             RichEditor::make('content')
                 ->label('Isi berita')

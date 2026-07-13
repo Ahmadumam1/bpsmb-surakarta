@@ -14,11 +14,11 @@ class ComplaintRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:120'],
-            'email' => ['required', 'email', 'max:160'],
-            'phone' => ['nullable', 'string', 'max:30'],
-            'subject' => ['required', 'string', 'max:180'],
-            'message' => ['required', 'string', 'min:10', 'max:5000'],
+            'name' => ['required', 'string', 'max:30'],
+            'email' => ['required', 'email', 'max:30'],
+            'phone' => ['nullable', 'string', 'max:15'],
+            'subject' => ['required', 'string', 'max:100'],
+            'message' => ['required', 'string', 'min:10', 'max:2000'],
         ];
     }
 }
