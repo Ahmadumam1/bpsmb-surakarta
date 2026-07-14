@@ -7,7 +7,6 @@ use App\Filament\Resources\Documents\Pages\CreateDocument;
 use App\Filament\Resources\Documents\Pages\EditDocument;
 use App\Filament\Resources\Documents\Pages\ListDocuments;
 use App\Models\Document;
-use App\Models\Service;
 use BackedEnum;
 use Filament\Actions\Action;
 use Filament\Actions\DeleteAction;
@@ -15,14 +14,12 @@ use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Hidden;
-use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -59,15 +56,10 @@ class DocumentResource extends Resource
                 ->required()
                 ->maxLength(255)
                 ->columnSpanFull(),
-            Select::make('service_id')
-                ->label('Layanan terkait')
-                ->options(fn (): array => Service::query()->orderBy('name')->pluck('name', 'id')->all())
-                ->searchable()
-                ->preload()
-                ->nullable(),
             FileUpload::make('file_path')
                 ->label('File dokumen')
                 ->disk('public')
+                ->columnSpanFull()
                 ->directory('documents')
                 ->acceptedFileTypes([
                     'application/pdf',
@@ -98,11 +90,6 @@ class DocumentResource extends Resource
                 ->required()
                 ->helperText('PDF, Word, Excel, PPT (Maks. 5 MB) atau JPG, PNG, WEBP (Maks. 2 MB).'),
             Hidden::make('file_type'),
-            TextInput::make('sort_order')
-                ->label('Urutan')
-                ->numeric()
-                ->default(0)
-                ->required(),
             Toggle::make('is_active')
                 ->label('Tampilkan ke publik')
                 ->default(true)
@@ -113,16 +100,14 @@ class DocumentResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->modifyQueryUsing(fn (Builder $query): Builder => $query->with('service')->orderBy('sort_order')->orderBy('title'))
+            ->modifyQueryUsing(fn (Builder $query): Builder => $query->orderBy('title'))
             ->columns([
                 TextColumn::make('no')->label('No')->rowIndex(),
                 TextColumn::make('title')->label('Nama dokumen')->searchable()->sortable()->wrap(),
-                TextColumn::make('service.name')->label('Layanan')->badge()->placeholder('Dokumen')->searchable()->sortable(),
                 TextColumn::make('file_type')
                     ->label('Format')
                     ->badge()
                     ->formatStateUsing(fn (?string $state): string => strtoupper($state ?? '-')),
-                TextColumn::make('sort_order')->label('Urutan')->sortable(),
                 TextColumn::make('is_active')
                     ->label('Status')
                     ->badge()
@@ -130,9 +115,6 @@ class DocumentResource extends Resource
                     ->color(fn (bool $state): string => $state ? 'success' : 'gray'),
             ])
             ->filters([
-                SelectFilter::make('service_id')
-                    ->label('Layanan')
-                    ->relationship('service', 'name'),
                 TernaryFilter::make('is_active')->label('Aktif'),
             ])
             ->recordActions([

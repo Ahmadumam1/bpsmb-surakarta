@@ -1,6 +1,7 @@
 @php
     $featuredVideo = $videoSections->first();
     $sideVideos = $videoSections->skip(1)->take(3);
+    $hasRealVideos = $videoSections->isNotEmpty();
     $defaultVideos = collect([
         ['date' => '15 Okt 2023', 'title' => 'Sosialisasi Akreditasi Laboratorium KAN'],
         ['date' => '10 Okt 2023', 'title' => 'Prosedur Kalibrasi Alat Ukur Industri'],
@@ -28,13 +29,14 @@
                 class="hidden min-h-11 items-center justify-center rounded-[8px] bg-[#d4af37] px-5 py-2.5 text-[14px] font-semibold leading-[1.29] tracking-[-0.224px] text-white shadow-[0_16px_36px_rgba(212,175,55,0.24)] transition-colors transition-transform hover:bg-[#b99018] active:scale-95 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-[#f4d35e] md:inline-flex">Lihat Semua &rarr;</a>
         </div>
 
-        <div class="mt-8 grid gap-8 sm:mt-10 lg:grid-cols-[1fr_340px]">
-            <div data-aos="fade-up">
+        {{-- Grid: 2 kolom hanya jika ada video di sidebar, atau tidak ada video sama sekali (mode dummy) --}}
+        <div class="mt-8 grid gap-8 sm:mt-10 {{ ($sideVideos->isNotEmpty() || !$hasRealVideos) ? 'lg:grid-cols-[1fr_340px]' : '' }}">
+            <div data-aos="fade-up" class="{{ ($sideVideos->isEmpty() && $hasRealVideos) ? 'mx-auto w-full max-w-3xl' : '' }}">
             <a href="{{ $featuredVideo?->embed_url ?: '#galeri-video' }}"
                 data-video-modal-open
                 data-video-embed-url="{{ $featuredVideo?->embed_url }}"
                 data-video-title="{{ $featuredVideo?->title ?? 'Profil Balai Pengujian dan Sertifikasi Mutu Barang Surakarta' }}"
-                class="relative flex aspect-video min-h-0 items-end overflow-hidden rounded-[8px] shadow-[0_8px_24px_rgba(15,23,42,0.10)] transition-transform transition-shadow hover:-translate-y-1 hover:shadow-[0_18px_42px_rgba(15,23,42,0.16)] lg:aspect-auto lg:min-h-[430px]" data-aos="zoom-in" data-aos-delay="120">
+                class="relative flex aspect-video min-h-0 items-end overflow-hidden rounded-[8px] shadow-[0_8px_24px_rgba(15,23,42,0.10)] transition-transform transition-shadow hover:-translate-y-1 hover:shadow-[0_18px_42px_rgba(15,23,42,0.16)] {{ ($sideVideos->isEmpty() && $hasRealVideos) ? 'lg:aspect-video' : 'lg:aspect-auto lg:min-h-[430px]' }}" data-aos="zoom-in" data-aos-delay="120">
                 <img src="{{ $featuredVideo?->image_url ?: asset('assets/section1.jpg') }}"
                     alt="{{ $featuredVideo?->title ?? 'Profil Balai Pengujian dan Sertifikasi Mutu Barang Surakarta' }}"
                     class="absolute inset-0 h-full w-full object-cover">
@@ -58,6 +60,8 @@
             </a>
             </div>
 
+            {{-- Sidebar: tampil jika ada video lebih dari 1, atau jika tidak ada video sama sekali (dummy) --}}
+            @if ($sideVideos->isNotEmpty() || !$hasRealVideos)
             <aside class="self-end" data-aos="fade-left" data-aos-delay="160">
             @forelse ($sideVideos as $video)
                 <a href="{{ $video->embed_url ?: '#galeri-video' }}"
@@ -87,19 +91,23 @@
                     </span>
                 </a>
             @empty
-                @foreach ($defaultVideos as $video)
-                    <a href="#galeri-video" class="mb-6 grid grid-cols-[112px_1fr] gap-4 rounded-[8px] bg-white p-2 shadow-[0_8px_24px_rgba(15,23,42,0.10)] transition-transform transition-shadow hover:-translate-y-1 hover:shadow-[0_18px_42px_rgba(15,23,42,0.16)]">
-                        <img src="{{ asset('assets/section1.jpg') }}" alt="{{ $video['title'] }}"
-                            class="h-20 w-full rounded-[8px] object-cover">
-                        <span>
-                            <span class="block text-[12px] leading-none tracking-[-0.12px] text-[#7a7a7a]">{{ $video['date'] }}</span>
-                            <span class="mt-2 block text-[14px] font-semibold leading-[1.29] tracking-[-0.224px] text-[#1d1d1f]">{{ $video['title'] }}</span>
-                            <span class="mt-1 block text-[12px] leading-none tracking-[-0.12px] text-[#7a7a7a]">Duration: 3:45</span>
-                        </span>
-                    </a>
-                @endforeach
+                {{-- Dummy hanya muncul jika benar-benar tidak ada video sama sekali --}}
+                @if (!$hasRealVideos)
+                    @foreach ($defaultVideos as $video)
+                        <a href="#galeri-video" class="mb-6 grid grid-cols-[112px_1fr] gap-4 rounded-[8px] bg-white p-2 shadow-[0_8px_24px_rgba(15,23,42,0.10)] transition-transform transition-shadow hover:-translate-y-1 hover:shadow-[0_18px_42px_rgba(15,23,42,0.16)]">
+                            <img src="{{ asset('assets/section1.jpg') }}" alt="{{ $video['title'] }}"
+                                class="h-20 w-full rounded-[8px] object-cover">
+                            <span>
+                                <span class="block text-[12px] leading-none tracking-[-0.12px] text-[#7a7a7a]">{{ $video['date'] }}</span>
+                                <span class="mt-2 block text-[14px] font-semibold leading-[1.29] tracking-[-0.224px] text-[#1d1d1f]">{{ $video['title'] }}</span>
+                                <span class="mt-1 block text-[12px] leading-none tracking-[-0.12px] text-[#7a7a7a]">Duration: 3:45</span>
+                            </span>
+                        </a>
+                    @endforeach
+                @endif
             @endforelse
             </aside>
+            @endif
         </div>
 
         <a href="{{ route('media.video.index') }}"

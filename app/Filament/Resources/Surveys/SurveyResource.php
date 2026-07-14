@@ -83,11 +83,6 @@ class SurveyResource extends Resource
                 ->required()
                 ->helperText('Hanya PDF (Maks. 5 MB) atau JPG, PNG, WEBP (Maks. 2 MB). File ditampilkan di halaman Survei Kepuasan Pelanggan.'),
             Hidden::make('file_type'),
-            TextInput::make('sort_order')
-                ->label('Urutan')
-                ->numeric()
-                ->default(0)
-                ->required(),
             Toggle::make('is_active')
                 ->label('Tampilkan ke publik')
                 ->default(true)
@@ -98,12 +93,11 @@ class SurveyResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->modifyQueryUsing(fn (Builder $query): Builder => $query->orderBy('sort_order')->orderByDesc('id'))
+            ->modifyQueryUsing(fn (Builder $query): Builder => $query->orderByDesc('id'))
             ->columns([
                 TextColumn::make('no')->label('No')->rowIndex(),
                 TextColumn::make('title')->label('Judul')->searchable()->sortable()->wrap(),
                 TextColumn::make('file_type')->label('Tipe')->badge()->formatStateUsing(fn (?string $state): string => strtoupper($state ?? '-')),
-                TextColumn::make('sort_order')->label('Urutan')->sortable(),
                 TextColumn::make('is_active')
                     ->label('Status')
                     ->badge()

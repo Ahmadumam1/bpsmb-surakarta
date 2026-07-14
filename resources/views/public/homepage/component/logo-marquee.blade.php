@@ -23,29 +23,41 @@
 @once
     <style>
         @keyframes logo-marquee {
-            from {
-                transform: translateX(0);
-            }
-
-            to {
-                transform: translateX(-50%);
-            }
+            from { transform: translateX(0); }
+            to   { transform: translateX(-50%); }
         }
 
+        /* Wrapper: cursor grab, no text selection saat drag */
+        .logo-marquee-outer {
+            overflow: hidden;
+            cursor: grab;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+        .logo-marquee-outer.dragging {
+            cursor: grabbing;
+        }
+
+        /* Track: auto-scroll by default */
         .logo-marquee-track {
             animation: logo-marquee 90s linear infinite;
+            will-change: transform;
         }
 
-        .logo-marquee-track:hover {
-            animation-play-state: paused;
+        /* Pause saat hover logo — dikontrol via JS agar konsisten dengan inline style */
+
+        /* Nonaktifkan klik link saat sedang drag */
+        .logo-marquee-outer.dragging .logo-marquee-track a {
+            pointer-events: none;
         }
     </style>
 @endonce
 
 <section class="relative overflow-hidden bg-[#f5f5f7] py-5 sm:py-9" data-aos="fade-up">
-    <div class="relative mx-auto max-w-7xl overflow-hidden px-4 sm:px-6 lg:px-8">
-        <div class="overflow-hidden py-2 sm:py-3">
-            <div class="flex w-max items-center logo-marquee-track">
+    <div class="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        {{-- Wrapper draggable --}}
+        <div class="logo-marquee-outer py-2 sm:py-3" id="marqueeOuter">
+            <div class="flex w-max items-center logo-marquee-track" id="marqueeTrack">
                 @foreach ([1, 2] as $loopIndex)
                     <div class="flex items-center gap-3 pr-3 sm:gap-4 sm:pr-4" @if ($loopIndex === 2) aria-hidden="true" @endif>
                         @foreach ($marqueeSequence as $logo)
@@ -71,3 +83,135 @@
         </div>
     </div>
 </section>
+
+@once
+<script>
+(function () {
+    function initMarqueeDrag() {
+        const outer = document.getElementById('marqueeOuter');
+        const track = document.getElementById('marqueeTrack');
+        if (!outer || !track) return;
+
+        const ANIMATION_DURATION = 90; // detik, harus sama dengan CSS
+
+        let isDragging = false;
+        let startX    = 0;
+        let baseX     = 0;   // translateX saat drag dimulai
+        let currentX  = 0;   // translateX terakhir
+        let velX      = 0;   // velocity untuk momentum
+        let lastX     = 0;
+        let lastTime  = 0;
+        let rafId     = null;
+
+        /** Baca nilai translateX saat ini dari computed style (posisi animasi berjalan) */
+        function getComputedTranslateX() {
+            const mat = new DOMMatrixReadOnly(window.getComputedStyle(track).transform);
+            return mat.m41;
+        }
+
+        /** Freeze animasi & ambil posisi saat ini */
+        function freezeTrack() {
+            currentX = getComputedTranslateX();
+            track.style.animationPlayState = 'paused';
+            // Tempel posisi langsung supaya tidak loncat
+            track.style.transform = `translateX(${currentX}px)`;
+            // Matikan animasi agar transform manual bisa bekerja
+            track.style.animation = 'none';
+        }
+
+        /** Lanjutkan animasi dari posisi currentX secara mulus */
+        function resumeTrack(x) {
+            const halfWidth = track.scrollWidth / 2;
+            // Normalkan agar tetap dalam range [−halfWidth, 0]
+            let normalized = x % -halfWidth;
+            if (normalized > 0) normalized -= halfWidth;
+
+            const progress  = Math.abs(normalized) / halfWidth; // 0‒1
+            const delay     = -(progress * ANIMATION_DURATION);  // delay negatif = mulai di tengah
+
+            track.style.transform        = '';
+            track.style.animation        = `logo-marquee ${ANIMATION_DURATION}s linear infinite`;
+            track.style.animationDelay   = `${delay}s`;
+            track.style.animationPlayState = 'running';
+        }
+
+        /** Gerakkan track secara manual */
+        function moveTo(x) {
+            const halfWidth = track.scrollWidth / 2;
+            // Batas: tidak melebihi 0 ke kanan, tidak melebihi -halfWidth ke kiri
+            x = Math.max(-halfWidth, Math.min(0, x));
+            currentX = x;
+            track.style.transform = `translateX(${x}px)`;
+        }
+
+        /** Momentum setelah lepas drag */
+        function momentumScroll() {
+            velX *= 0.92; // friction
+            moveTo(currentX + velX);
+            if (Math.abs(velX) > 0.3) {
+                rafId = requestAnimationFrame(momentumScroll);
+            } else {
+                resumeTrack(currentX);
+            }
+        }
+
+        /* ---- START ---- */
+        function onStart(x) {
+            cancelAnimationFrame(rafId);
+            freezeTrack();
+            isDragging = true;
+            startX   = x;
+            baseX    = currentX;
+            velX     = 0;
+            lastX    = x;
+            lastTime = performance.now();
+            outer.classList.add('dragging');
+        }
+
+        /* ---- MOVE ---- */
+        function onMove(x) {
+            if (!isDragging) return;
+            const now   = performance.now();
+            const dt    = now - lastTime || 1;
+            velX        = ((x - lastX) / dt) * 16; // normalkan ke ~60fps
+            lastX       = x;
+            lastTime    = now;
+            moveTo(baseX + (x - startX));
+        }
+
+        /* ---- END ---- */
+        function onEnd() {
+            if (!isDragging) return;
+            isDragging = false;
+            outer.classList.remove('dragging');
+            // Momentum lembut lalu lanjutkan animasi
+            rafId = requestAnimationFrame(momentumScroll);
+        }
+
+        // Mouse
+        outer.addEventListener('mousedown',  (e) => { e.preventDefault(); onStart(e.clientX); });
+        window.addEventListener('mousemove', (e) => { onMove(e.clientX); });
+        window.addEventListener('mouseup',   ()  => { onEnd(); });
+
+        // Touch
+        outer.addEventListener('touchstart', (e) => { onStart(e.touches[0].clientX); }, { passive: true });
+        outer.addEventListener('touchmove',  (e) => { onMove(e.touches[0].clientX); },  { passive: true });
+        outer.addEventListener('touchend',   ()  => { onEnd(); });
+
+        // Hover pause/resume — dikontrol JS agar tidak bentrok dengan inline style
+        track.addEventListener('mouseenter', () => {
+            if (!isDragging) track.style.animationPlayState = 'paused';
+        });
+        track.addEventListener('mouseleave', () => {
+            if (!isDragging) track.style.animationPlayState = 'running';
+        });
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initMarqueeDrag);
+    } else {
+        initMarqueeDrag();
+    }
+})();
+</script>
+@endonce

@@ -20,13 +20,13 @@ if (videoModal) {
         const trigger = event.target.closest('[data-video-modal-open]');
 
         if (trigger) {
+            event.preventDefault();
+
             const embedUrl = trigger.dataset.videoEmbedUrl;
 
             if (!embedUrl) {
                 return;
             }
-
-            event.preventDefault();
 
             const target = new URL(embedUrl, window.location.origin);
 
