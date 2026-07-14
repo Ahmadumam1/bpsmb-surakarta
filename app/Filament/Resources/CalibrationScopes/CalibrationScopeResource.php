@@ -93,7 +93,6 @@ class CalibrationScopeResource extends Resource
                         ->all()),
             ])
             ->recordActions([
-                ViewAction::make(),
                 EditAction::make(),
                 DeleteAction::make(),
             ]);

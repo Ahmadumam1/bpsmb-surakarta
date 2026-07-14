@@ -21,7 +21,7 @@ class CostController extends Controller
             ->orderByDesc('id')
             ->first();
         $search = trim((string) $request->query('q'));
-        $baseQuery = ServiceFee::query()->active();
+        $baseQuery = ServiceFee::query();
 
         $fees = (clone $baseQuery)
             ->orderBy('category')
@@ -30,7 +30,6 @@ class CostController extends Controller
             ->map(fn (ServiceFee $fee) => [
                 'category' => $fee->category,
                 'service_name' => $fee->service_name,
-                'description' => $fee->description,
                 'unit' => $fee->unit,
                 'price' => $fee->price,
                 'formatted_price' => $fee->formattedPrice(),
@@ -38,7 +37,6 @@ class CostController extends Controller
                 'search' => Str::lower(implode(' ', array_filter([
                     $fee->category,
                     $fee->service_name,
-                    $fee->description,
                     $fee->unit,
                     $fee->formattedPrice(),
                     $fee->regulation_reference,

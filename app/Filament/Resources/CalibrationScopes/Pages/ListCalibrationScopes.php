@@ -3,7 +3,8 @@
 namespace App\Filament\Resources\CalibrationScopes\Pages;
 
 use App\Filament\Resources\CalibrationScopes\CalibrationScopeResource;
-use Filament\Actions\CreateAction;
+use App\Filament\Support\CsvImportActions;
+use App\Support\CalibrationScopeCsv;
 use Filament\Resources\Pages\ListRecords;
 
 class ListCalibrationScopes extends ListRecords
@@ -12,6 +13,11 @@ class ListCalibrationScopes extends ListRecords
 
     protected function getHeaderActions(): array
     {
-        return [CreateAction::make()];
+        return CsvImportActions::make(
+            csvClass: CalibrationScopeCsv::class,
+            directory: 'imports/calibration-scopes',
+            helperText: 'Gunakan file CSV dengan kolom: kategori, alat_ruang_lingkup. Maksimal 5 MB.',
+            notificationTitle: 'Import ruang lingkup kalibrasi selesai',
+        );
     }
 }

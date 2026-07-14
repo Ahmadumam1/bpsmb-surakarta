@@ -69,7 +69,6 @@ class AccreditationScopeResource extends Resource
                 TextColumn::make('reference')->label('Acuan')->searchable()->sortable()->wrap(),
             ])
             ->recordActions([
-                ViewAction::make(),
                 EditAction::make(),
                 DeleteAction::make(),
             ]);

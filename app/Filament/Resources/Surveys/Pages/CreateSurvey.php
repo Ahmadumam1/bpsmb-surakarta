@@ -2,15 +2,13 @@
 
 namespace App\Filament\Resources\Surveys\Pages;
 
+use App\Filament\Concerns\HasIndonesianNotifications;
 use App\Filament\Resources\Surveys\SurveyResource;
 use Filament\Resources\Pages\CreateRecord;
 
 class CreateSurvey extends CreateRecord
 {
-    protected static string $resource = SurveyResource::class;
+    use HasIndonesianNotifications;
 
-    protected function mutateFormDataBeforeCreate(array $data): array
-    {
-        return SurveyResource::prepareSurveyData($data);
-    }
+    protected static string $resource = SurveyResource::class;
 }

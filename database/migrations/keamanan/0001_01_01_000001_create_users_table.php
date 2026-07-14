@@ -16,6 +16,8 @@ return new class extends Migration
             $table->string('password');
             $table->foreignId('role_id')->constrained()->restrictOnDelete();
             $table->rememberToken();
+            $table->text('google2fa_secret')->nullable();
+            $table->boolean('google2fa_enabled')->default(false);
             $table->timestamp('password_changed_at')->nullable();
             $table->timestamp('password_expires_at')->nullable();
             $table->boolean('password_must_be_changed')->default(false);

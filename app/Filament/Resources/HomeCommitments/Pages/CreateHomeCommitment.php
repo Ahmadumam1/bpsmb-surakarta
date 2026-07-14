@@ -2,10 +2,13 @@
 
 namespace App\Filament\Resources\HomeCommitments\Pages;
 
+use App\Filament\Concerns\HasIndonesianNotifications;
 use App\Filament\Resources\HomeCommitments\HomeCommitmentResource;
 use Filament\Resources\Pages\CreateRecord;
 
 class CreateHomeCommitment extends CreateRecord
 {
+    use HasIndonesianNotifications;
+
     protected static string $resource = HomeCommitmentResource::class;
 }

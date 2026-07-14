@@ -3,7 +3,8 @@
 namespace App\Filament\Resources\ProductCertificationInfos\Pages;
 
 use App\Filament\Resources\ProductCertificationInfos\ProductCertificationInfoResource;
-use Filament\Actions\CreateAction;
+use App\Filament\Support\CsvImportActions;
+use App\Support\ProductCertificationInfoCsv;
 use Filament\Resources\Pages\ListRecords;
 
 class ListProductCertificationInfos extends ListRecords
@@ -12,6 +13,11 @@ class ListProductCertificationInfos extends ListRecords
 
     protected function getHeaderActions(): array
     {
-        return [CreateAction::make()];
+        return CsvImportActions::make(
+            csvClass: ProductCertificationInfoCsv::class,
+            directory: 'imports/product-certification-infos',
+            helperText: 'Gunakan file CSV dengan kolom: skema, kategori, jenis_produk, acuan. Maksimal 5 MB.',
+            notificationTitle: 'Import informasi sertifikasi produk selesai',
+        );
     }
 }

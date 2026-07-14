@@ -20,14 +20,17 @@ class ListTestingDurations extends ListRecords
             Action::make('download_template')
                 ->label('Template')
                 ->icon('heroicon-o-document-arrow-down')
+                ->color('gray')
                 ->action(fn () => TestingDurationCsv::streamTemplate()),
             Action::make('export')
                 ->label('Export')
                 ->icon('heroicon-o-arrow-down-tray')
+                ->color('success')
                 ->action(fn () => TestingDurationCsv::streamExport()),
             Action::make('import')
                 ->label('Import')
                 ->icon('heroicon-o-arrow-up-tray')
+                ->color('warning')
                 ->schema([
                     FileUpload::make('file')
                         ->label('File CSV dari Excel')
@@ -53,7 +56,7 @@ class ListTestingDurations extends ListRecords
                         ->success()
                         ->send();
                 }),
-            CreateAction::make(),
+            CreateAction::make()->label('New'),
         ];
     }
 }

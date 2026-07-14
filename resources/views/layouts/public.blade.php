@@ -6,9 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="@yield('meta_description', 'Website resmi BPSMB Surakarta untuk informasi layanan pengujian dan sertifikasi mutu barang.')">
     <title>@yield('title', 'BPSMB Surakarta')</title>
-    <link rel="icon" type="image/png" href="{{ asset('assets/logo.png') }}">
-    <link rel="shortcut icon" type="image/png" href="{{ asset('assets/logo.png') }}">
-    <link rel="apple-touch-icon" href="{{ asset('assets/logo.png') }}">
+    <link rel="icon" type="image/png" href="{{ asset('assets/logo2.png') }}">
+    <link rel="shortcut icon" type="image/png" href="{{ asset('assets/logo2.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset('assets/logo2.png') }}">
     @stack('styles')
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css">

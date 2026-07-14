@@ -10,17 +10,14 @@ use App\Models\ServiceFee;
 use BackedEnum;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
-use Filament\Actions\ViewAction;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Toggle;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
-use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -71,24 +68,18 @@ class ServiceFeeResource extends Resource
                 ->label('Uraian layanan')
                 ->required()
                 ->maxLength(255),
-            Textarea::make('description')
-                ->label('Keterangan')
-                ->rows(3)
-                ->maxLength(1000),
+
             TextInput::make('unit')
                 ->label('Satuan')
-                ->default('per sampel')
-                ->required()
-                ->maxLength(120),
+                ->numeric()
+                ->default(1)
+                ->suffix('Sampel')
+                ->required(),
             TextInput::make('price')
                 ->label('Tarif')
                 ->numeric()
                 ->prefix('Rp')
                 ->minValue(0)
-                ->required(),
-            Toggle::make('is_active')
-                ->label('Aktif')
-                ->default(true)
                 ->required(),
         ]);
     }
@@ -99,18 +90,17 @@ class ServiceFeeResource extends Resource
             ->modifyQueryUsing(fn (Builder $query): Builder => $query->orderBy('category')->orderBy('service_name')->orderBy('id'))
             ->columns([
                 TextColumn::make('no')->label('No')->rowIndex(),
-                TextColumn::make('category')->label('Kategori')->badge()->searchable()->sortable(),
+                TextColumn::make('category')
+                    ->label('Kategori')
+                    ->badge()
+                    ->searchable()
+                    ->sortable(),
                 TextColumn::make('service_name')->label('Uraian layanan')->searchable()->sortable()->wrap(),
-                TextColumn::make('unit')->label('Satuan')->badge()->searchable()->sortable(),
+                TextColumn::make('unit')->label('Satuan')->suffix(' Sampel')->searchable()->sortable(),
                 TextColumn::make('price')
                     ->label('Tarif')
                     ->money('IDR', locale: 'id')
                     ->sortable(),
-                TextColumn::make('is_active')
-                    ->label('Status')
-                    ->badge()
-                    ->formatStateUsing(fn (bool $state): string => $state ? 'Aktif' : 'Nonaktif')
-                    ->color(fn (bool $state): string => $state ? 'success' : 'gray'),
             ])
             ->filters([
                 SelectFilter::make('category')
@@ -120,10 +110,8 @@ class ServiceFeeResource extends Resource
                         ->pluck('category', 'category')
                         ->unique()
                         ->all()),
-                TernaryFilter::make('is_active')->label('Aktif'),
             ])
             ->recordActions([
-                ViewAction::make(),
                 EditAction::make(),
                 DeleteAction::make(),
             ]);

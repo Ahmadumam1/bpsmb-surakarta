@@ -85,7 +85,6 @@ class SampleCollectionFeeResource extends Resource
                     ->sortable(),
             ])
             ->recordActions([
-                ViewAction::make(),
                 EditAction::make(),
                 DeleteAction::make(),
             ]);

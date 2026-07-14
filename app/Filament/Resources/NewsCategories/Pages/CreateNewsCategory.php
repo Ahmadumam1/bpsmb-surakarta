@@ -2,11 +2,14 @@
 
 namespace App\Filament\Resources\NewsCategories\Pages;
 
+use App\Filament\Concerns\HasIndonesianNotifications;
 use App\Filament\Resources\NewsCategories\NewsCategoryResource;
 use Filament\Resources\Pages\CreateRecord;
 
 class CreateNewsCategory extends CreateRecord
 {
+    use HasIndonesianNotifications;
+
     protected static string $resource = NewsCategoryResource::class;
 
     protected function mutateFormDataBeforeCreate(array $data): array

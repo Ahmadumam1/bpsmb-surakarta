@@ -14,7 +14,7 @@ class RoleSeeder extends Seeder
             ['name' => 'Superadmin'],
             [
                 'type' => 'superadmin',
-                'permissions' => AdminPermissions::keys(),
+                'permissions' => array_keys(AdminPermissions::options()),
                 'is_active' => true,
             ],
         );

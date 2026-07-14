@@ -67,6 +67,9 @@
                         popupEl.classList.remove('opacity-0');
                         popupEl.classList.add('opacity-100');
                         
+                        // Disable scroll pada body
+                        document.body.classList.add('overflow-hidden');
+                        
                         const cardEl = popupEl.querySelector('.popup-card');
                         if (cardEl) {
                             cardEl.classList.remove('scale-95', 'opacity-0');
@@ -86,6 +89,9 @@
                         
                         // Simpan status bahwa popup sudah dilihat dalam sesi ini
                         sessionStorage.setItem('home_popup_dismissed', 'true');
+                        
+                        // Re-enable scroll pada body
+                        document.body.classList.remove('overflow-hidden');
                         
                         // Sembunyikan elemen setelah animasi selesai (300ms)
                         setTimeout(() => {

@@ -25,14 +25,10 @@ class ServiceFeeSeeder extends Seeder
             $data = array_combine($header, $row);
 
             ServiceFee::create([
-                'category' => $data['category'],
+                'category'     => $data['category'],
                 'service_name' => preg_replace('/^\s*\d+\.?\s+/', '', $data['service_name']),
-                'description' => $data['description'] ?: null,
-                'unit' => $data['unit'],
-                'price' => (int) $data['price'],
-                'regulation_reference' => $data['regulation_reference'] ?: null,
-                'source_page' => $data['source_page'] !== '' ? (int) $data['source_page'] : null,
-                'is_active' => true,
+                'unit'         => (int) preg_replace('/[^0-9]/', '', $data['unit'] ?? '') ?: 1,
+                'price'        => (int) $data['price'],
             ]);
         }
 

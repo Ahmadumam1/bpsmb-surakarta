@@ -3,6 +3,7 @@
 namespace App\Support;
 
 use App\Models\TestingDuration;
+use App\Support\CsvReader;
 use Illuminate\Support\Facades\Storage;
 use SplFileObject;
 
@@ -54,7 +55,7 @@ class TestingDurationCsv
     {
         $fullPath = Storage::disk('local')->path($path);
         $file = new SplFileObject($fullPath);
-        $file->setCsvControl(self::detectDelimiter($fullPath));
+        $file->setCsvControl(CsvReader::detectDelimiter($fullPath));
         $file->setFlags(SplFileObject::READ_CSV | SplFileObject::SKIP_EMPTY | SplFileObject::DROP_NEW_LINE);
 
         $created = 0;
@@ -70,11 +71,11 @@ class TestingDurationCsv
             $row = array_map(fn($value): string => trim((string) $value), $row);
 
             if ($index === 0) {
-                $headers = self::normalizeHeaders($row);
+                $headers = CsvReader::normalizeHeaders($row);
                 continue;
             }
 
-            $data = self::mapRow($headers, $row);
+            $data = CsvReader::mapRow($headers, $row);
 
             if (! self::isValidRow($data)) {
                 $skipped++;
@@ -99,43 +100,4 @@ class TestingDurationCsv
         return compact('created', 'updated', 'skipped');
     }
 
-    private static function normalizeHeaders(array $headers): array
-    {
-        return array_map(
-            fn(string $header): string => str_replace([' ', '-'], '_', strtolower(trim($header, "\xEF\xBB\xBF \t\n\r\0\x0B"))),
-            $headers,
-        );
-    }
-
-    private static function detectDelimiter(string $fullPath): string
-    {
-        $handle = fopen($fullPath, 'rb');
-
-        if ($handle === false) {
-            return ',';
-        }
-
-        $firstLine = (string) fgets($handle);
-        fclose($handle);
-
-        return substr_count($firstLine, ';') > substr_count($firstLine, ',') ? ';' : ',';
-    }
-
-    private static function mapRow(array $headers, array $row): array
-    {
-        $data = [];
-
-        foreach ($headers as $index => $header) {
-            $data[$header] = $row[$index] ?? '';
-        }
-
-        return $data;
-    }
-
-    private static function isValidRow(array $data): bool
-    {
-        return filled($data['kategori'] ?? null)
-            && filled($data['karakteristik_uji'] ?? null)
-            && is_numeric($data['durasi'] ?? null);
-    }
 }

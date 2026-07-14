@@ -11,21 +11,6 @@ trait AuthorizesResourceByRole
         return ['superadmin', 'admin'];
     }
 
-    protected static function viewAnyRoles(): array
-    {
-        return static::allowedRoles();
-    }
-
-    protected static function createRoles(): array
-    {
-        return static::allowedRoles();
-    }
-
-    protected static function editRoles(): array
-    {
-        return static::allowedRoles();
-    }
-
     protected static function deleteRoles(): array
     {
         return ['superadmin'];
@@ -55,17 +40,17 @@ trait AuthorizesResourceByRole
 
     public static function canViewAny(): bool
     {
-        return static::currentUserHasRole(static::viewAnyRoles());
+        return static::currentUserHasRole(static::allowedRoles());
     }
 
     public static function canCreate(): bool
     {
-        return static::currentUserHasRole(static::createRoles());
+        return static::currentUserHasRole(static::allowedRoles());
     }
 
     public static function canEdit(Model $record): bool
     {
-        return static::currentUserHasRole(static::editRoles());
+        return static::currentUserHasRole(static::allowedRoles());
     }
 
     public static function canDelete(Model $record): bool

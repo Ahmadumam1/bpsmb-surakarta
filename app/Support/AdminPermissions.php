@@ -30,8 +30,4 @@ class AdminPermissions
         ];
     }
 
-    public static function keys(): array
-    {
-        return array_keys(static::options());
-    }
 }

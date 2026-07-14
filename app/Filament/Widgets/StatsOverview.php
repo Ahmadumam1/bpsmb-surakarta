@@ -18,14 +18,6 @@ class StatsOverview extends BaseWidget
         $totalVideos = Video::count();
         $totalBerita = News::count();
 
-        $visitorTrend = VisitorStat::query()
-            ->orderBy('date', 'desc')
-            ->limit(7)
-            ->pluck('total_views')
-            ->reverse()
-            ->values()
-            ->toArray();
-
 
         return [
             Stat::make('Total Kunjungan', $totalViews)

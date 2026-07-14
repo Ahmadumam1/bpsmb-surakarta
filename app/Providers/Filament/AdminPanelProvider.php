@@ -38,12 +38,13 @@ class AdminPanelProvider extends PanelProvider
             ->passwordReset(RequestPasswordReset::class)
             ->brandName('BPSMB Surakarta')
             ->brandLogo(fn() => new HtmlString('
-                <span style="display: inline-flex; align-items: center; gap: 10px; height: 32px; white-space: nowrap;">
-                    <img src="' . e(asset('assets/logo.png')) . '" alt="Logo BPSMB Surakarta" style="height: 60px; width: 60px; object-fit: contain; flex-shrink: 0;">
+                <span style="display: inline-flex; align-items: center; gap: 10px; height: 100%; white-space: nowrap;">
+                    <img src="' . e(asset('assets/logo2.png')) . '" alt="Logo BPSMB Surakarta" style="height: 38px; width: auto; object-fit: contain; flex-shrink: 0;">
                     <span class="fi-brand-text" style="font-size: 20px; font-weight: 600; line-height: 1;">BPSMB Surakarta</span>
                 </span>
             '))
-            ->brandLogoHeight('1.5rem')
+            ->brandLogoHeight('2.5rem')
+            ->favicon(asset('assets/logo2.png'))
             ->colors([
                 'primary' => Color::Indigo,
             ])
@@ -64,6 +65,9 @@ class AdminPanelProvider extends PanelProvider
                                 url("' . e(asset('assets/bg.jpg')) . '");
                             background-position: center;
                             background-size: cover;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
                         }
 
                         .fi-simple-main {
