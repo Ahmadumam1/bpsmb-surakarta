@@ -58,26 +58,98 @@ class AdminPanelProvider extends PanelProvider
                 PanelsRenderHook::SIMPLE_LAYOUT_START,
                 fn() => new HtmlString('
                     <style>
+                        /* === Layout Utama === */
                         .fi-simple-layout {
                             min-height: 100vh;
+                            width: 100%;
                             background:
                                 linear-gradient(135deg, rgba(5, 46, 38, 0.92), rgba(15, 23, 42, 0.72)),
                                 url("' . e(asset('assets/bg.jpg')) . '");
                             background-position: center;
                             background-size: cover;
+                            background-attachment: fixed;
                             display: flex;
                             align-items: center;
                             justify-content: center;
+                            padding: 1rem;
+                            box-sizing: border-box;
                         }
 
+                        /* === Card Login === */
                         .fi-simple-main {
                             position: relative;
                             z-index: 1;
+                            width: 100%;
+                            max-width: 420px;
+                            margin: 0 auto;
+                        }
+
+                        /* === Card Container (kotak putih) === */
+                        .fi-simple-main > * {
+                            border-radius: 16px !important;
+                            overflow: hidden;
+                        }
+
+                        /* === Header Brand (logo + nama) === */
+                        .fi-simple-header {
+                            padding: 1.5rem 1.5rem 0 !important;
+                        }
+
+                        /* === Form Section === */
+                        .fi-simple-card {
+                            border-radius: 16px !important;
+                            box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35) !important;
+                            padding: 1.5rem !important;
+                        }
+
+                        /* === Input Fields Mobile === */
+                        @media (max-width: 640px) {
+                            .fi-simple-layout {
+                                padding: 0.75rem;
+                                align-items: flex-start;
+                                padding-top: max(1.5rem, env(safe-area-inset-top));
+                                padding-bottom: max(1.5rem, env(safe-area-inset-bottom));
+                            }
+
+                            .fi-simple-main {
+                                max-width: 100%;
+                            }
+
+                            /* Card melengkung di pojok seperti desktop */
+                            .fi-simple-card,
+                            .fi-simple-main > *,
+                            .fi-simple-main > * > * {
+                                border-radius: 16px !important;
+                            }
+
+                            /* Pastikan elemen form dalam card tidak kotak */
+                            .fi-simple-layout .fi-card,
+                            .fi-simple-layout [class*="rounded-none"] {
+                                border-radius: 16px !important;
+                            }
+
+                            .fi-simple-card {
+                                padding: 1.25rem !important;
+                                overflow: hidden;
+                            }
+
+                            /* Input lebih besar di mobile supaya mudah diklik */
+                            .fi-input {
+                                font-size: 1rem !important;
+                                min-height: 2.75rem !important;
+                            }
+
+                            /* Tombol login lebih besar di mobile */
+                            .fi-btn {
+                                min-height: 2.75rem !important;
+                                font-size: 0.9375rem !important;
+                            }
                         }
                     </style>
                 '),
                 [Login::class, RequestPasswordReset::class],
             )
+
             ->renderHook(
                 PanelsRenderHook::AUTH_PASSWORD_RESET_REQUEST_FORM_AFTER,
                 fn() => new HtmlString('
