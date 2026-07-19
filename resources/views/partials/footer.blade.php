@@ -141,13 +141,17 @@
             class="mx-auto flex max-w-7xl flex-col gap-4 px-4 py-4 text-center sm:px-6 sm:py-6 lg:flex-row lg:items-center lg:justify-between lg:px-8 lg:text-left">
             <p class="text-[11px] leading-5 text-[#b7c6dc] sm:text-[15px] sm:leading-6">&copy; {{ now()->year }} Pemerintah Provinsi Jawa Tengah - BPSMB Surakarta. Hak Cipta Dilindungi.</p>
 
-            <div class="grid flex-1 grid-cols-3 items-center gap-2 text-center sm:flex sm:justify-center sm:gap-9 lg:max-w-[520px]">
+            <div class="grid flex-1 grid-cols-2 gap-y-3.5 gap-x-2 items-center text-center sm:flex sm:justify-center sm:gap-9 lg:max-w-[620px]">
                 <div>
                     <p class="text-[10px] font-bold leading-tight text-white sm:text-[13px] sm:leading-none">Total Pengunjung</p>
                     <p class="mt-1 text-[11px] leading-none text-white/88 sm:mt-2 sm:text-[13px]">{{ number_format($visitorTotal ?? 0, 0, ',', '.') }}</p>
                 </div>
                 <div>
                     <p class="text-[10px] font-bold leading-tight text-white sm:text-[13px] sm:leading-none">Bulan ini</p>
+                    <p class="mt-1 text-[11px] leading-none text-white/88 sm:mt-2 sm:text-[13px]">{{ number_format($visitorMonth ?? 0, 0, ',', '.') }}</p>
+                </div>
+                <div>
+                    <p class="text-[10px] font-bold leading-tight text-white sm:text-[13px] sm:leading-none">Minggu ini</p>
                     <p class="mt-1 text-[11px] leading-none text-white/88 sm:mt-2 sm:text-[13px]">{{ number_format($visitorWeek ?? 0, 0, ',', '.') }}</p>
                 </div>
                 <div>

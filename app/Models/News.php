@@ -23,6 +23,7 @@ class News extends Model
         'author',
         'published_at',
         'is_published',
+        'views',
     ];
 
     protected $appends = [
@@ -34,6 +35,7 @@ class News extends Model
         return [
             'published_at' => 'datetime',
             'is_published' => 'boolean',
+            'views' => 'integer',
         ];
     }
 

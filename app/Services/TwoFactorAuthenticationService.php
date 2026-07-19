@@ -23,7 +23,7 @@ class TwoFactorAuthenticationService
     public function qrCodeSvg(User $user, string $secret): string
     {
         $qrCodeUrl = $this->google2fa->getQRCodeUrl(
-            config('app.name', 'Laravel').' Admin',
+            config('app.name', 'BPSMB Surakarta'),
             $user->email,
             $secret,
         );

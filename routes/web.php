@@ -62,6 +62,7 @@ Route::post('/kontak', [ContactController::class, 'send'])->name('contact.send')
 
 Route::prefix('media')->name('media.')->group(function () {
     Route::get('/berita', [NewsController::class, 'index'])->name('news.index');
+    Route::post('/berita/log-search', [NewsController::class, 'logSearch'])->name('news.log-search');
     Route::get('/berita/{news}', [NewsController::class, 'show'])->name('news.show');
     Route::get('/foto', [PhotoController::class, 'index'])->name('photo.index');
     Route::get('/video', [VideoController::class, 'index'])->name('video.index');

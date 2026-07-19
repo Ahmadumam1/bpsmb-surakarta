@@ -51,6 +51,8 @@ class AppServiceProvider extends ServiceProvider
                     $today = now()->toDateString();
                     $startOfWeek = now()->startOfWeek()->toDateString();
                     $endOfWeek = now()->endOfWeek()->toDateString();
+                    $startOfMonth = now()->startOfMonth()->toDateString();
+                    $endOfMonth = now()->endOfMonth()->toDateString();
 
                     return [
                         'today' => VisitorStat::query()
@@ -58,14 +60,18 @@ class AppServiceProvider extends ServiceProvider
                             ->value('total_views') ?? 0,
                         'week' => VisitorStat::query()
                             ->whereBetween('date', [$startOfWeek, $endOfWeek])
-                            ->sum('total_views'),
+                            ->sum('total_views') ?? 0,
+                        'month' => VisitorStat::query()
+                            ->whereBetween('date', [$startOfMonth, $endOfMonth])
+                            ->sum('total_views') ?? 0,
                         'total' => VisitorStat::query()
-                            ->sum('total_views'),
+                            ->sum('total_views') ?? 0,
                     ];
                 } catch (QueryException) {
                     return [
                         'today' => 0,
                         'week' => 0,
+                        'month' => 0,
                         'total' => 0,
                     ];
                 }
@@ -74,6 +80,7 @@ class AppServiceProvider extends ServiceProvider
             $view->with([
                 'visitorToday' => (int) $stats['today'],
                 'visitorWeek' => (int) $stats['week'],
+                'visitorMonth' => (int) $stats['month'],
                 'visitorTotal' => (int) $stats['total'],
                 'siteSettings' => SiteSettings::all(),
             ]);

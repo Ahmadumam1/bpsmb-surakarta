@@ -12,7 +12,7 @@ use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
-use Filament\Pages\Dashboard;
+use App\Filament\Pages\Dashboard;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
@@ -58,7 +58,7 @@ class AdminPanelProvider extends PanelProvider
                 PanelsRenderHook::SIMPLE_LAYOUT_START,
                 fn() => new HtmlString('
                     <style>
-                        /* === Layout Utama === */
+                        /* === Layout Utama (Desktop & Mobile) === */
                         .fi-simple-layout {
                             min-height: 100vh;
                             width: 100%;
@@ -75,34 +75,17 @@ class AdminPanelProvider extends PanelProvider
                             box-sizing: border-box;
                         }
 
-                        /* === Card Login === */
-                        .fi-simple-main {
-                            position: relative;
-                            z-index: 1;
-                            width: 100%;
-                            max-width: 420px;
-                            margin: 0 auto;
+                        /* Force Brand Text di Login Page agar selalu Hitam (Desktop & Mobile) */
+                        .fi-simple-layout .fi-brand-text {
+                            color: #000000 !important;
                         }
 
-                        /* === Card Container (kotak putih) === */
-                        .fi-simple-main > * {
-                            border-radius: 16px !important;
-                            overflow: hidden;
+                        /* Hapus/Sembunyikan text Sign in / Judul Halaman */
+                        .fi-simple-header-heading {
+                            display: none !important;
                         }
 
-                        /* === Header Brand (logo + nama) === */
-                        .fi-simple-header {
-                            padding: 1.5rem 1.5rem 0 !important;
-                        }
-
-                        /* === Form Section === */
-                        .fi-simple-card {
-                            border-radius: 16px !important;
-                            box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35) !important;
-                            padding: 1.5rem !important;
-                        }
-
-                        /* === Input Fields Mobile === */
+                        /* === Kustomisasi Khusus Mobile (max-width: 640px) === */
                         @media (max-width: 640px) {
                             .fi-simple-layout {
                                 padding: 0.75rem;
@@ -115,17 +98,19 @@ class AdminPanelProvider extends PanelProvider
                                 max-width: 100%;
                             }
 
-                            /* Card melengkung di pojok seperti desktop */
+                            /* Membuat pojok card utama melengkung halus di mobile */
+                            .fi-simple-main,
                             .fi-simple-card,
                             .fi-simple-main > *,
                             .fi-simple-main > * > * {
-                                border-radius: 16px !important;
+                                border-radius: 20px !important;
+                                overflow: hidden !important;
                             }
 
                             /* Pastikan elemen form dalam card tidak kotak */
                             .fi-simple-layout .fi-card,
                             .fi-simple-layout [class*="rounded-none"] {
-                                border-radius: 16px !important;
+                                border-radius: 20px !important;
                             }
 
                             .fi-simple-card {
@@ -191,7 +176,7 @@ class AdminPanelProvider extends PanelProvider
                         }
                         /* Brand/Logo text */
                         .fi-brand-text {
-                            color: #08236f !important; /* Dark Blue in Light Mode */
+                            color: #000000 !important; /* Black in Light Mode */
                         }
                         .dark .fi-brand-text {
                             color: #ffffff !important; /* White in Dark Mode */

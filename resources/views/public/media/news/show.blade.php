@@ -30,11 +30,7 @@
                         {{ $news->title }}
                     </h1>
                     <div class="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2 border-l-4 border-[#d4af37] pl-3 text-[13px] font-medium text-[#64748b] sm:text-sm">
-                        <span>{{ $news->published_at?->translatedFormat('d F Y') }}</span>
-                        @if ($news->author)
-                            <span class="hidden h-1 w-1 rounded-full bg-[#cbd5e1] sm:inline-block"></span>
-                            <span>{{ $news->author }}</span>
-                        @endif
+                        <span>{{ $news->published_at?->locale('id')->translatedFormat('d F Y') }}</span>
                     </div>
                 </div>
             </div>
@@ -48,6 +44,16 @@
                     class="h-[260px] w-full rounded-[12px] object-cover shadow-[0_18px_50px_rgba(15,23,42,0.12)] sm:h-[360px] lg:h-[430px]">
 
                 <div class="mt-8 rounded-[12px] border border-slate-200 bg-white p-5 text-[#334155] shadow-[0_12px_30px_rgba(15,23,42,0.05)] sm:p-8 [&_a]:font-semibold [&_a]:text-[#08236f] [&_blockquote]:mt-5 [&_blockquote]:border-l-4 [&_blockquote]:border-[#d4af37] [&_blockquote]:bg-[#f8fafc] [&_blockquote]:px-4 [&_blockquote]:py-3 [&_h2]:mt-8 [&_h2]:font-semibold [&_h2]:leading-tight [&_h2]:text-[#08236f] [&_h3]:mt-8 [&_h3]:font-semibold [&_h3]:leading-tight [&_h3]:text-[#08236f] [&_img]:my-6 [&_img]:rounded-[10px] [&_ol]:mt-4 [&_ol]:list-decimal [&_ol]:pl-5 [&_p]:mt-4 [&_p]:text-[15px] [&_p]:leading-8 [&_p]:text-[#334155] [&_strong]:text-[#1f2937] [&_ul]:mt-4 [&_ul]:list-disc [&_ul]:pl-5">
+                    <div class="flex justify-between items-center border-b border-slate-100 pb-4 mb-6">
+                        <span class="text-xs font-semibold uppercase tracking-wider text-[#64748b]">Penulis: {{ $news->author ?: 'Admin' }}</span>
+                        <span class="flex items-center gap-1.5 text-xs font-semibold text-[#64748b] bg-[#f1f5f9] px-2.5 py-1 rounded-full">
+                            <svg class="h-3.5 w-3.5 text-[#d4af37]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                            </svg>
+                            {{ number_format($news->views ?? 0, 0, ',', '.') }} Dilihat
+                        </span>
+                    </div>
                     {!! $news->content !!}
                 </div>
             </div>

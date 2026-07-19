@@ -8,9 +8,11 @@ use Carbon\Carbon;
 
 class VisitorChart extends ChartWidget
 {
+    protected static ?int $sort = 2;
+
     protected ?string $heading = 'Grafik Kunjungan (30 Hari Terakhir)';
 
-    protected int | string | array $columnSpan = 'full';
+    protected int | string | array $columnSpan = 8;
 
     protected ?string $maxHeight = '300px';
 

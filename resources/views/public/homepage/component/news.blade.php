@@ -30,13 +30,24 @@
                         
                         <!-- Card Content -->
                         <div class="flex flex-1 flex-col p-4 sm:p-6">
-                            <div class="flex items-center gap-2">
-                                <svg class="h-3.5 w-3.5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                </svg>
-                                <span class="text-[12px] font-medium leading-none text-[#7a7a7a]">
-                                    {{ $news->published_at?->format('d M Y') }}
-                                </span>
+                            <div class="flex items-center justify-between w-full gap-2">
+                                <div class="flex items-center gap-1.5">
+                                    <svg class="h-3.5 w-3.5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                    </svg>
+                                    <span class="text-[12px] font-medium leading-none text-[#7a7a7a]">
+                                        {{ $news->published_at?->locale('id')->translatedFormat('d F Y') }}
+                                    </span>
+                                </div>
+                                <div class="flex items-center gap-1.5 text-[#7a7a7a]">
+                                    <svg class="h-3.5 w-3.5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                    </svg>
+                                    <span class="text-[12px] font-medium leading-none">
+                                        {{ number_format($news->views ?? 0, 0, ',', '.') }}
+                                    </span>
+                                </div>
                             </div>
                             <h3 class="mt-3 line-clamp-2 text-[14px] font-semibold leading-[1.3] tracking-[-0.12px] text-[#1d1d1f] sm:mt-4 sm:text-[16px] sm:leading-[1.25] sm:tracking-[-0.12px] lg:text-[17px]">
                                 {{ $news->title }}

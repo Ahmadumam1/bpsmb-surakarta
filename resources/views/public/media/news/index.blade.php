@@ -145,9 +145,29 @@
                 currentPage = Number(params.get('page') || 1);
             };
 
+            let searchLogTimer;
+            const logSearchToServer = (keyword) => {
+                if (!keyword || keyword.length < 3) return;
+                fetch('{{ route('media.news.log-search') }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify({ keyword })
+                }).catch(() => {});
+            };
+
             const filterNews = () => {
                 const keyword = (searchInput?.value || '').trim().toLowerCase();
                 const category = categoryInput?.value || '';
+
+                window.clearTimeout(searchLogTimer);
+                if (keyword) {
+                    searchLogTimer = window.setTimeout(() => {
+                        logSearchToServer(keyword);
+                    }, 1000);
+                }
 
                 filteredNews = allNews.filter((news) => {
                     const matchesKeyword = !keyword || news.search.includes(keyword);
@@ -184,7 +204,21 @@
                         <div class="p-4 sm:p-6">
                             <div class="flex items-center justify-between gap-4">
                                 <span class="rounded-[5px] bg-[#f5f5f7] px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-[#08236f]">${escapeHtml(news.category_name)}</span>
-                                <span class="shrink-0 text-[12px] leading-none tracking-[-0.12px] text-[#7a7a7a]">${escapeHtml(news.published_at)}</span>
+                            </div>
+                            <div class="mt-4 flex items-center justify-between w-full border-b border-black/5 pb-3">
+                                <div class="flex items-center gap-1.5">
+                                    <svg class="h-3.5 w-3.5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                    </svg>
+                                    <span class="text-[12px] font-medium leading-none text-[#7a7a7a]">${escapeHtml(news.published_at)}</span>
+                                </div>
+                                <div class="flex items-center gap-1 text-[#7a7a7a]">
+                                    <svg class="h-3.5 w-3.5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                    </svg>
+                                    <span class="text-[12px] font-medium leading-none">${escapeHtml(news.views)}</span>
+                                </div>
                             </div>
                             <h2 class="mt-4 line-clamp-2 text-[18px] font-semibold leading-[1.22] tracking-[0.231px] text-[#1d1d1f] sm:mt-5 sm:text-[21px] sm:leading-[1.19]">${escapeHtml(news.title)}</h2>
                             <p class="mt-3 line-clamp-3 text-[14px] leading-[1.43] tracking-[-0.224px] text-[#7a7a7a]">${escapeHtml(news.excerpt)}</p>

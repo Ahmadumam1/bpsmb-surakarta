@@ -23,7 +23,8 @@ class NewsController extends Controller
                 'thumbnail_url' => $news->thumbnail_url ?: asset('assets/section1.jpg'),
                 'category_name' => $news->category?->name ?? 'Berita',
                 'category_slug' => $news->category?->slug ?? '',
-                'published_at' => $news->published_at?->format('d M Y') ?? '',
+                'published_at' => $news->published_at?->locale('id')->translatedFormat('d F Y') ?? '',
+                'views' => number_format($news->views, 0, ',', '.'),
                 'search' => str($news->title.' '.$news->excerpt.' '.$news->category?->name)->lower()->value(),
             ]);
 
@@ -40,6 +41,10 @@ class NewsController extends Controller
     {
         abort_unless($news->is_published && $news->published_at?->isPast(), 404);
 
+        try {
+            $news->increment('views');
+        } catch (\Throwable $e) {}
+
         $news->load('category');
         $relatedNews = News::query()
             ->with('category')
@@ -50,5 +55,19 @@ class NewsController extends Controller
             ->get();
 
         return view('public.media.news.show', compact('news', 'relatedNews'));
+    }
+
+    public function logSearch(Request $request)
+    {
+        $keyword = trim(strtolower($request->input('keyword')));
+        if ($keyword) {
+            try {
+                \App\Models\SearchLog::create([
+                    'keyword' => $keyword,
+                ]);
+            } catch (\Throwable $e) {}
+        }
+
+        return response()->json(['success' => true]);
     }
 }
